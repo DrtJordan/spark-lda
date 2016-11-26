@@ -8,10 +8,14 @@ import org.apache.spark.ml.feature.CountVectorizer
 import org.apache.spark.ml.clustering.LDA
 import scala.collection.mutable.WrappedArray
 import org.apache.spark.ml.feature.RegexTokenizer
+import org.apache.lucene.analysis.Analyzer
+import org.wltea.analyzer.lucene.IKAnalyzer
+import org.apache.lucene.analysis.tokenattributes.CharTermAttribute
+import org.apache.lucene.analysis.TokenStream
+import java.io.StringReader
 
 /**
   * 本程序为毕设spark lda聚类算法实现热点挖掘version 1.0
-  * 完成了对关键字热点发现的过程
   * 工作计划：
   * 1、直接使用LDA算法进行聚类热点发现
   *	2、整理好数据集
@@ -21,13 +25,12 @@ import org.apache.spark.ml.feature.RegexTokenizer
   * 6、搭建spark集群跑程序，搭建hadoop集群将数据从本地转移到hdfs中存储
   * 7、使用网页可视化展示热点
   * */
-object LDAFindHotTopic {
+object LDAFindHotTopic2 {
   def main(args: Array[String]): Unit = {
     val startTime = System.nanoTime()
     //屏蔽日志
     Logger.getLogger("org.apache.spark").setLevel(Level.WARN)
     Logger.getLogger("org.eclipse.jetty.server").setLevel(Level.OFF)
-    
     val spark = SparkSession
     .builder()
     .master("local[2]")  //设置运行方式是本地两个线程
@@ -42,15 +45,16 @@ object LDAFindHotTopic {
     //scala中获取隐式的方法将普通的scala对象转化成DataFrames类型,不能将它移动上面的import位置，为什么？
     import sqlContext.implicits._
     //读取数据,数据格式:（数据1 数据2 ...），如：摘要,感知,基础的,物联网,技术,迅速发展 ,产业化
-    val src = spark.read.textFile("F:/spark-software/program/LDA/data/keywords")   
-    val srcDF = src.map { case (str: String) => 
+    val src = spark.read.textFile("F:/spark-software/program/LDA/data/test/*") 
+
+    val srcDF = src.map { case (str: String) =>
       (str.toString())
     }.toDF("text")
     val trainingDF = srcDF
     
     //RegexTokenizer类指定匹配正则切分数据
     //设置输入text、输出words、正则
-    val regextTokenizer = new RegexTokenizer().setInputCol("text").setOutputCol("words").setPattern(",")
+    val regextTokenizer = new RegexTokenizer().setInputCol("text").setOutputCol("words").setPattern(" ")
     //以,切分
     val wordsData = regextTokenizer.transform(trainingDF)
 

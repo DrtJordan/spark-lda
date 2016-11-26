@@ -209,5 +209,7 @@
 	<classpathentry kind="lib" path="F:/spark-software/spark-2.0.0-bin-hadoop2.7/jars/xmlenc-0.52.jar"/>
 	<classpathentry kind="lib" path="F:/spark-software/spark-2.0.0-bin-hadoop2.7/jars/xz-1.0.jar"/>
 	<classpathentry kind="lib" path="F:/spark-software/spark-2.0.0-bin-hadoop2.7/jars/zookeeper-3.4.6.jar"/>
+	<classpathentry kind="lib" path="E:/IKAnalyzer2012_u6/IKAnalyzer2012_u6.jar"/>
+	<classpathentry kind="lib" path="E:/IKAnalyzer2012_u6/lucene-core-3.6.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
